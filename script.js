@@ -1,8 +1,10 @@
 function convertToRGB() {
-    const hex = document.getElementById("hexInput").value;
+    const hex = document.getElementById("hexInput").value;    
     const rgb = hexToRgb(hex);
     if (rgb) {
         document.getElementById("output").innerText = "RGB: " + rgb;
+        document.getElementById("output").style.backgroundColor = rgb;        
+        document.getElementById("rgbInput").value = rgb;
     } else {
         document.getElementById("output").innerText = "Color HEX inválido.";
     }
@@ -13,6 +15,8 @@ function convertToHEX() {
     const hex = rgbToHex(rgb);
     if (hex) {
         document.getElementById("output").innerText = "HEX: " + hex;
+        document.getElementById("output").style.backgroundColor = hex;
+        document.getElementById("hexInput").value = hex;
     } else {
         document.getElementById("output").innerText = "Color RGB inválido.";
     }
@@ -49,7 +53,13 @@ function updateColor() {
     const rgbColor = `rgb(${r}, ${g}, ${b})`;
     document.getElementById("colorPreview").style.backgroundColor = rgbColor;
     document.getElementById("output").innerText = rgbColor;
+    document.getElementById("output").style.backgroundColor = rgbColor;
 
+    // Actualiza los campos de entrada
+    document.getElementById("rgbInput").value = rgbColor;
+
+    document.getElementById("hexInput").value = rgbToHex(rgbColor);
+    
     // Generar las paletas
     generatePalettes(r, g, b);
 }
@@ -73,6 +83,7 @@ function displayPalette(colors, elementId) {
         const colorDiv = document.createElement("div");
         colorDiv.className = "color-sample";
         colorDiv.style.backgroundColor = `rgb(${color.r}, ${color.g}, ${color.b})`;
+        colorDiv.innerText = rgbToHex( `rgb(${color.r}, ${color.g}, ${color.b})`);
         paletteDiv.appendChild(colorDiv);
     });
 }
