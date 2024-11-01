@@ -20,9 +20,9 @@ h1, h2 {
 }
 
 input[type="text"] {
-    width: 100%;
+    width: 40%;
     padding: 10px;
-    margin: 10px 0;
+    margin: 10px 25px 10px 5px;
     border-radius: 5px;
     border: 1px solid #ddd;
     font-size: 16px;
@@ -45,11 +45,12 @@ button:hover {
 }
 
 #output {
+    height: 50px;
     margin-top: 20px;
-    padding: 10px;
     background-color: #eaeaea;
+    padding: 10%;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 46px;
     text-align: center;
 }
 
@@ -60,16 +61,16 @@ button:hover {
 }
 
 .color-sample {
-    width: 60px;
-    height: 60px;
-    margin: 5px;
+    width: 150px;
+    height: 150px;
+    margin: 10px;
+    padding: 12px;
     border-radius: 5px;
-    border: 1px solid #ddd;
+    border: 1px solid darkgray;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 15px;
     display: flex;
     align-items: center;
-    text-align: center;
 }
 
 .slider-container {

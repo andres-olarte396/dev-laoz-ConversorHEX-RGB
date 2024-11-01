@@ -1,124 +1,162 @@
 function convertToRGB() {
-    const hex = document.getElementById("hexInput").value;    
-    const rgb = hexToRgb(hex);
-    if (rgb) {
-        document.getElementById("output").innerText = "RGB: " + rgb;
-        document.getElementById("output").style.backgroundColor = rgb;        
-        document.getElementById("rgbInput").value = rgb;
-    } else {
-        document.getElementById("output").innerText = "Color HEX inválido.";
-    }
+  const hex = getInputValue("hexInput");
+  const rgb = hexToRgb(hex);
+  updateOutput(rgb ? `RGB: ${rgb}` : "Color HEX inválido.", rgb);
+  setInputValue("rgbInput", rgb);
+  if (rgb) updateSlidersFromRGB(rgb); // Actualiza sliders
 }
 
 function convertToHEX() {
-    const rgb = document.getElementById("rgbInput").value;
-    const hex = rgbToHex(rgb);
-    if (hex) {
-        document.getElementById("output").innerText = "HEX: " + hex;
-        document.getElementById("output").style.backgroundColor = hex;
-        document.getElementById("hexInput").value = hex;
-    } else {
-        document.getElementById("output").innerText = "Color RGB inválido.";
-    }
+  const rgb = getInputValue("rgbInput");
+  const hex = rgbToHex(rgb);
+  updateOutput(hex ? `HEX: ${hex}` : "Color RGB inválido.", hex);
+  setInputValue("hexInput", hex);
+  if (hex) updateSlidersFromRGB(rgb); // Actualiza sliders
+}
+
+function updateSlidersFromRGB(rgb) {
+  const result = /^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/.exec(rgb);
+  if (result) {
+    const r = parseInt(result[1]);
+    const g = parseInt(result[2]);
+    const b = parseInt(result[3]);
+
+    document.getElementById("redSlider").value = r;
+    document.getElementById("greenSlider").value = g;
+    document.getElementById("blueSlider").value = b;
+
+    document.getElementById("redValue").innerHTML = r;
+    document.getElementById("greenValue").innerHTML = g;
+    document.getElementById("blueValue").innerHTML = b;
+
+    generatePalettes(r, g, b);
+  }
+}
+
+function updateOutput(text, color) {
+  const outputElement = document.getElementById("output");
+  outputElement.innerText = text;
+  outputElement.style.backgroundColor = color || "transparent";
+}
+
+function getInputValue(id) {
+  return document.getElementById(id).value;
+}
+
+function setInputValue(id, value) {
+  document.getElementById(id).value = value || "";
 }
 
 function hexToRgb(hex) {
-    const validHex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
-    const result = validHex.exec(hex);
-    return result ? `rgb(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)})` : null;
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? `rgb(${[result[1], result[2], result[3]].map((v) => parseInt(v, 16)).join(", ")})`
+    : null;
 }
 
 function rgbToHex(rgb) {
-    const validRgb = /^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/;
-    const result = validRgb.exec(rgb);
-    return result ? "#" + componentToHex(result[1]) + componentToHex(result[2]) + componentToHex(result[3]) : null;
+  const result = /^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/.exec(rgb);
+  return result
+    ? "#" + result.slice(1, 4).map(componentToHex).join("")
+    : null;
 }
 
 function componentToHex(c) {
-    const hex = parseInt(c).toString(16);
-    return hex.length == 1 ? "0" + hex : hex;
+  const hex = parseInt(c).toString(16);
+  return hex.padStart(2, "0");
 }
 
 function updateColor() {
-    const r = document.getElementById("redSlider").value;
-    const g = document.getElementById("greenSlider").value;
-    const b = document.getElementById("blueSlider").value;
+  const r = getInputValue("redSlider");
+  const g = getInputValue("greenSlider");
+  const b = getInputValue("blueSlider");
 
-    // Actualiza el valor de cada etiqueta
-    document.getElementById("redValue").innerText = r;
-    document.getElementById("greenValue").innerText = g;
-    document.getElementById("blueValue").innerText = b;
+  ["red", "green", "blue"].forEach((color) =>
+    setInnerText(`${color}Value`, getInputValue(`${color}Slider`))
+  );
 
-    // Cambia el fondo del área de previsualización
-    const rgbColor = `rgb(${r}, ${g}, ${b})`;
-    document.getElementById("colorPreview").style.backgroundColor = rgbColor;
-    document.getElementById("output").innerText = rgbColor;
-    document.getElementById("output").style.backgroundColor = rgbColor;
+  const rgbColor = `rgb(${r}, ${g}, ${b})`;
+  updateOutput(rgbColor, rgbColor);
+  setInputValue("rgbInput", rgbColor);
+  setInputValue("hexInput", rgbToHex(rgbColor));
 
-    // Actualiza los campos de entrada
-    document.getElementById("rgbInput").value = rgbColor;
-
-    document.getElementById("hexInput").value = rgbToHex(rgbColor);
-    
-    // Generar las paletas
-    generatePalettes(r, g, b);
+  generatePalettes(parseInt(r), parseInt(g), parseInt(b));
 }
 
-// Funciones para generar las paletas de colores
-function generatePalettes(r, g, b) {
-    const complementary = getComplementaryColors(r, g, b);
-    const monochromatic = getMonochromaticColors(r, g, b);
-    const analogous = getAnalogousColors(r, g, b);
+function setInnerText(id, text) {
+  document.getElementById(id).innerText = text;
+}
 
-    displayPalette(complementary, "complementaryPalette");
-    displayPalette(monochromatic, "monochromaticPalette");
-    displayPalette(analogous, "analogousPalette");
+function generatePalettes(r, g, b) {
+  displayPalette(getComplementaryColors(r, g, b), "complementaryPalette");
+  displayPalette(getMonochromaticColors(r, g, b), "monochromaticPalette");
+  displayPalette(getAnalogousColors(r, g, b), "analogousPalette");
 }
 
 function displayPalette(colors, elementId) {
-    const paletteDiv = document.getElementById(elementId);
-    paletteDiv.innerHTML = "";  // Limpiar la paleta actual
+  const paletteDiv = document.getElementById(elementId);
+  paletteDiv.innerHTML = "";
 
-    colors.forEach(color => {
-        const colorDiv = document.createElement("div");
-        colorDiv.className = "color-sample";
-        colorDiv.style.backgroundColor = `rgb(${color.r}, ${color.g}, ${color.b})`;
-        colorDiv.innerText = rgbToHex( `rgb(${color.r}, ${color.g}, ${color.b})`);
-        paletteDiv.appendChild(colorDiv);
-    });
+  colors.forEach((color) => {
+    const colorDiv = document.createElement("div");
+    colorDiv.className = "color-sample";
+    colorDiv.style.backgroundColor = `rgb(${color.r}, ${color.g}, ${color.b})`;
+    colorDiv.innerText = rgbToHex(`rgb(${color.r}, ${color.g}, ${color.b})`);
+    paletteDiv.appendChild(colorDiv);
+  });
 }
 
-// Obtener 6 colores complementarios
 function getComplementaryColors(r, g, b) {
-    const colors = [];
-    for (let i = 0; i < 6; i++) {
-        colors.push({ r: (255 - r + i * 20) % 256, g: (255 - g + i * 20) % 256, b: (255 - b + i * 20) % 256 });
-    }
-    return colors;
+  const t = 20;
+  let result = [
+    getInvertedColor(r - t, g - t, b - t),
+    getInvertedColor(r, g, b),
+    getInvertedColor(r + t, g + t, b + t)
+  ];
+  return result;
 }
 
-// Obtener 6 colores monocromáticos (ajustando el brillo)
 function getMonochromaticColors(r, g, b) {
-    const colors = [];
-    for (let i = 0; i < 6; i++) {
-        colors.push({
-            r: Math.min(255, r + i * 20),
-            g: Math.min(255, g + i * 20),
-            b: Math.min(255, b + i * 20)
-        });
-    }
-    return colors;
+  const t = 20;
+  let result = [
+    adjustBrightness(r, g, b, -t),
+    { r, g, b },
+    adjustBrightness(r, g, b, t)
+  ];
+  return result;
 }
 
-// Obtener 6 colores análogos
 function getAnalogousColors(r, g, b) {
-    const colors = [];
-    for (let i = 0; i < 6; i++) {
-        colors.push({
-            r: (r + i * 20) % 256,
-            g: (g + i * 20) % 256,
-            b: (b + i * 20) % 256
-        });
-    }
-    return colors;
+  const t = 65;
+  let result = [
+    adjustColor(r - t, g - t, b - t),
+    { r, g, b },
+    adjustColor(r + t, g + t, b + t)
+  ];
+  return result;
 }
+
+function getInvertedColor(r, g, b) {
+  return {
+    r: 255 - (r % 255), 
+    g: 255 - (g % 255), 
+    b: 255 - (b % 255)};
+}
+
+function adjustBrightness(r, g, b, amount) {
+  return {
+    r: Math.max(0, r + amount), 
+    g: Math.max(0, g + amount), 
+    b: Math.max(0, b + amount)};
+}
+
+function adjustColor(r, g, b) {
+  return {
+    r: (r < 0 ? 255 + r : r) % 255,
+    g: (g < 0 ? 255 + g : g) % 255,
+    b: (b < 0 ? 255 + b : b) % 255};
+}
+
+// Event listeners para actualizar sliders al cambiar los inputs
+document.getElementById("rgbInput").addEventListener("input", convertToHEX);
+document.getElementById("hexInput").addEventListener("input", convertToRGB);
