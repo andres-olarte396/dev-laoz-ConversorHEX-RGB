@@ -1,42 +1,79 @@
 <!DOCTYPE html>
 <html lang="es">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Conversor de Colores HEX ↔ RGB/HSLA</title>
-    <link rel="stylesheet" href="styles.css" />
-</head>
+    <link rel="stylesheet" href="../dev-laoz-WaveArtCSS/src/theme.css" />
+    <link rel="stylesheet" href="../dev-laoz-WaveArtCSS/src/base.css" />
+    <link rel="stylesheet" href="../dev-laoz-WaveArtCSS/src/components.css" />
+  </head>
 
-<body>
-    <div class="container">
-        <h1>Conversor de Colores HEX ↔ RGB/HSLA</h1>
-        <input type="text" id="hexInput" placeholder="Ingresa un color HEX (e.g. #ff5733)" />
+  <body>
+    <header>
+      <h1>Conversor de Colores HEX ↔ RGB/HSLA</h1>
+      <p>Este ejemplo muestra los estilos básicos aplicados.</p>
+    </header>
+    <main>
+      <div class="container">
+        <input
+          type="text"
+          id="hexInput"
+          placeholder="Ingresa un color HEX (e.g. #ff5733)"
+        />
         <button onclick="convertToRGB()">Convertir a RGB</button>
-        <input type="text" id="rgbInput" placeholder="Ingresa un color RGB (e.g. rgb(255, 87, 51))" />
+        <input
+          type="text"
+          id="rgbInput"
+          placeholder="Ingresa un color RGB (e.g. rgb(255, 87, 51))"
+        />
         <button onclick="convertToHEX()">Convertir a HEX</button>
         <div id="output"></div>
         <h2>Generar Color con Controles RGB</h2>
         <div class="slider-container">
-            <div class="slider-label">
-                <label for="redSlider">R</label>
-                <span id="redValue">0</span>
-            </div>
-            <input type="range" id="redSlider" class="slider" min="0" max="255" value="0" onchange="updateColor()" />
+          <div class="slider-label">
+            <label for="redSlider">R</label>
+            <span id="redValue">0</span>
+          </div>
+          <input
+            type="range"
+            id="redSlider"
+            class="slider"
+            min="0"
+            max="255"
+            value="0"
+            onchange="updateColor()"
+          />
         </div>
         <div class="slider-container">
-            <div class="slider-label">
-                <label for="greenSlider">G</label>
-                <span id="greenValue">0</span>
-            </div>
-            <input type="range" id="greenSlider" class="slider" min="0" max="255" value="0" onchange="updateColor()" />
+          <div class="slider-label">
+            <label for="greenSlider">G</label>
+            <span id="greenValue">0</span>
+          </div>
+          <input
+            type="range"
+            id="greenSlider"
+            class="slider"
+            min="0"
+            max="255"
+            value="0"
+            onchange="updateColor()"
+          />
         </div>
         <div class="slider-container">
-            <div class="slider-label">
-                <label for="blueSlider">B</label>
-                <span id="blueValue">0</span>
-            </div>
-            <input type="range" id="blueSlider" class="slider" min="0" max="255" value="0" onchange="updateColor()" />
+          <div class="slider-label">
+            <label for="blueSlider">B</label>
+            <span id="blueValue">0</span>
+          </div>
+          <input
+            type="range"
+            id="blueSlider"
+            class="slider"
+            min="0"
+            max="255"
+            value="0"
+            onchange="updateColor()"
+          />
         </div>
         <h2>Paletas de Colores</h2>
         <h3>Complementarios</h3>
@@ -45,9 +82,11 @@
         <div class="color-box" id="monochromaticPalette"></div>
         <h3>Análogos</h3>
         <div class="color-box" id="analogousPalette"></div>
-    </div>
-
+      </div>
+    </main>
+    <footer>
+      <p>© 2024 Mi Negocio. Todos los derechos reservados.</p>
+    </footer>
     <script src="script.js"></script>
-</body>
-
+  </body>
 </html>
